@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Translation\OptionTranslation;
+use AppBundle\Entity\Translation\AttributeTranslation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -10,36 +10,44 @@ use Gedmo\Translatable\Translatable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Option Entity
+ * Attribute Entity
  *
  * @author Yevgeniy Zholkevskiy <zhenya.zholkevskiy@gmail.com>
  *
- * @ORM\Table(name="options")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\OptionRepository")
+ * @ORM\Table(name="attributes")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\AttributeRepository")
  *
- * @Gedmo\TranslationEntity(class="AppBundle\Entity\Translation\OptionTranslation")
+ * @Gedmo\TranslationEntity(class="AppBundle\Entity\Translation\AttributeTranslation")
  */
-class Option implements Translatable
+class Attribute implements Translatable
 {
     /**
-     * @var int $id ID
+     * var int $id ID
      *
      * @ORM\Id
-     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @var string $name Name
+     * @var AttributeGroup $attributeGroup Attribute group
      *
-     * @ORM\Column(type="string", length=255, nullable=false)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\AttributeGroup", inversedBy="attributes")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     *
+     * @Assert\NotBlank()
+     */
+    private $attributeGroup;
+
+    /**
+     * var string $name Name
+     *
+     * @ORM\Column(type="string", nullable=false)
      *
      * @Assert\NotBlank()
      * @Assert\Type(type="string")
      * @Assert\Length(min="2", max="255")
-     *
-     * @Gedmo\Translatable
      */
     private $name;
 
@@ -60,10 +68,10 @@ class Option implements Translatable
     private $locale;
 
     /**
-     * @var OptionTranslation $translations Option translation
+     * @var AttributeTranslation $translations Attribute translation
      *
      * @ORM\OneToMany(
-     *   targetEntity="AppBundle\Entity\Translation\OptionTranslation",
+     *   targetEntity="AppBundle\Entity\Translation\AttributeTranslation",
      *   mappedBy="object",
      *   cascade={"persist", "remove"}
      * )
@@ -89,25 +97,25 @@ class Option implements Translatable
     }
 
     /**
-     * Get name
+     * Get attribute group
      *
-     * @return string Name
+     * @return AttributeGroup Attribute group
      */
-    public function getName()
+    public function getAttributeGroup()
     {
-        return $this->name;
+        return $this->attributeGroup;
     }
 
     /**
-     * Set name
+     * Set attribute group
      *
-     * @param string $name Name
+     * @param AttributeGroup $attributeGroup Attribute group
      *
      * @return $this
      */
-    public function setName($name)
+    public function setAttributeGroup($attributeGroup)
     {
-        $this->name = $name;
+        $this->attributeGroup = $attributeGroup;
 
         return $this;
     }
@@ -123,15 +131,39 @@ class Option implements Translatable
     }
 
     /**
-     * Set Locale
+     * Set locale
      *
-     * @param string $locale Locale
+     * @param string $locale locale
      *
      * @return $this
      */
     public function setLocale($locale)
     {
         $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string Name
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name name
+     *
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
 
         return $this;
     }
@@ -149,7 +181,7 @@ class Option implements Translatable
     /**
      * Set sort order
      *
-     * @param int $sortOrder
+     * @param int $sortOrder Sort order
      *
      * @return $this
      */
@@ -163,15 +195,15 @@ class Option implements Translatable
     /**
      * Add translation
      *
-     * @param OptionTranslation $optionTranslation
+     * @param AttributeTranslation $attributeTranslation
      *
      * @return $this
      */
-    public function addTranslation(OptionTranslation $optionTranslation)
+    public function addTranslation(AttributeTranslation $attributeTranslation)
     {
-        if (!$this->translations->contains($optionTranslation)) {
-            $this->translations->add($optionTranslation);
-            $optionTranslation->setObject($this);
+        if (!$this->translations->contains($attributeTranslation)) {
+            $this->translations->add($attributeTranslation);
+            $attributeTranslation->setObject($this);
         }
 
         return $this;
@@ -180,11 +212,11 @@ class Option implements Translatable
     /**
      * Remove translation
      *
-     * @param OptionTranslation $optionTranslation
+     * @param AttributeTranslation $attributeTranslation
      */
-    public function removeTranslation(OptionTranslation $optionTranslation)
+    public function removeTranslation(AttributeTranslation $attributeTranslation)
     {
-        $this->translations->removeElement($optionTranslation);
+        $this->translations->removeElement($attributeTranslation);
     }
 
     /**

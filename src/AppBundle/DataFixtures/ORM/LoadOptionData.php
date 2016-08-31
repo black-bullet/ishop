@@ -83,8 +83,8 @@ class LoadOptionData extends AbstractFixture implements OrderedFixtureInterface
             ->setContent('Обсяг пам\'яті відеокарти')
             ->setLocale('uk');
         $optionTranslationEn = (new OptionTranslation())
-            ->setField('The amount of video memory')
-            ->setContent('RAM')
+            ->setField('name')
+            ->setContent('The amount of video memory')
             ->setLocale('en');
 
         $option->addTranslation($optionTranslationUa)
@@ -92,7 +92,7 @@ class LoadOptionData extends AbstractFixture implements OrderedFixtureInterface
         $this->setReference('option-video-memory', $option);
         $manager->persist($option);
 
-        //Type of hard drive
+        //Type of drive
         $option = (new Option())
             ->setName('Тип накопителя');
 
@@ -101,8 +101,8 @@ class LoadOptionData extends AbstractFixture implements OrderedFixtureInterface
             ->setContent('Тип накопичувача')
             ->setLocale('uk');
         $optionTranslationEn = (new OptionTranslation())
-            ->setField('Type of hard drive')
-            ->setContent('RAM')
+            ->setField('name')
+            ->setContent('Type of hard drive')
             ->setLocale('en');
 
         $option->addTranslation($optionTranslationUa)
@@ -110,7 +110,7 @@ class LoadOptionData extends AbstractFixture implements OrderedFixtureInterface
         $this->setReference('option-type-hard-drive', $option);
         $manager->persist($option);
 
-        //Amount of hard drive
+        //Amount of drive
         $option = (new Option())
             ->setName('Объём накопителя');
 
@@ -119,8 +119,8 @@ class LoadOptionData extends AbstractFixture implements OrderedFixtureInterface
             ->setContent('Обсяг накопичувача')
             ->setLocale('uk');
         $optionTranslationEn = (new OptionTranslation())
-            ->setField('Amount of hard drive')
-            ->setContent('RAM')
+            ->setField('name')
+            ->setContent('Amount of hard drive')
             ->setLocale('en');
 
         $option->addTranslation($optionTranslationUa)
