@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Translation\AttributeGroupTranslation;
+use AppBundle\Entity\Translation\AttributeTranslation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -10,16 +10,16 @@ use Gedmo\Translatable\Translatable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * AttributeGroup Entity
+ * Attribute Entity
  *
  * @author Yevgeniy Zholkevskiy <zhenya.zholkevskiy@gmail.com>
  *
- * @ORM\Table(name="attribute_groups")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\AttributeGroupRepository")
+ * @ORM\Table(name="attributes")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\AttributeRepository")
  *
- * @Gedmo\TranslationEntity(class="AppBundle\Entity\Translation\AttributeGroupTranslation")
+ * @Gedmo\TranslationEntity(class="AppBundle\Entity\Translation\AttributeTranslation")
  */
-class AttributeGroup implements Translatable
+class Attribute implements Translatable
 {
     /**
      * var int $id ID
@@ -31,11 +31,14 @@ class AttributeGroup implements Translatable
     private $id;
 
     /**
-     * @var ArrayCollection|Attribute[] $attributes Attributes
+     * @var AttributeGroup $attributeGroup Attribute group
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Attribute", mappedBy="attributeGroup", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\AttributeGroup", inversedBy="attributes")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     *
+     * @Assert\NotBlank()
      */
-    private $attributes;
+    private $attributeGroup;
 
     /**
      * var string $name Name
@@ -65,10 +68,10 @@ class AttributeGroup implements Translatable
     private $locale;
 
     /**
-     * @var AttributeGroupTranslation $translations Attribute group translation
+     * @var AttributeTranslation $translations Attribute translation
      *
      * @ORM\OneToMany(
-     *   targetEntity="AppBundle\Entity\Translation\AttributeGroupTranslation",
+     *   targetEntity="AppBundle\Entity\Translation\AttributeTranslation",
      *   mappedBy="object",
      *   cascade={"persist", "remove"}
      * )
@@ -81,7 +84,6 @@ class AttributeGroup implements Translatable
     public function __construct()
     {
         $this->translations = new ArrayCollection();
-        $this->attributes   = new ArrayCollection();
     }
 
     /**
@@ -92,6 +94,30 @@ class AttributeGroup implements Translatable
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get attribute group
+     *
+     * @return AttributeGroup Attribute group
+     */
+    public function getAttributeGroup()
+    {
+        return $this->attributeGroup;
+    }
+
+    /**
+     * Set attribute group
+     *
+     * @param AttributeGroup $attributeGroup Attribute group
+     *
+     * @return $this
+     */
+    public function setAttributeGroup($attributeGroup)
+    {
+        $this->attributeGroup = $attributeGroup;
+
+        return $this;
     }
 
     /**
@@ -169,15 +195,15 @@ class AttributeGroup implements Translatable
     /**
      * Add translation
      *
-     * @param AttributeGroupTranslation $attributeGroupTranslation
+     * @param AttributeTranslation $attributeTranslation
      *
      * @return $this
      */
-    public function addTranslation(AttributeGroupTranslation $attributeGroupTranslation)
+    public function addTranslation(AttributeTranslation $attributeTranslation)
     {
-        if (!$this->translations->contains($attributeGroupTranslation)) {
-            $this->translations->add($attributeGroupTranslation);
-            $attributeGroupTranslation->setObject($this);
+        if (!$this->translations->contains($attributeTranslation)) {
+            $this->translations->add($attributeTranslation);
+            $attributeTranslation->setObject($this);
         }
 
         return $this;
@@ -186,11 +212,11 @@ class AttributeGroup implements Translatable
     /**
      * Remove translation
      *
-     * @param AttributeGroupTranslation $attributeGroupTranslation
+     * @param AttributeTranslation $attributeTranslation
      */
-    public function removeTranslation(AttributeGroupTranslation $attributeGroupTranslation)
+    public function removeTranslation(AttributeTranslation $attributeTranslation)
     {
-        $this->translations->removeElement($attributeGroupTranslation);
+        $this->translations->removeElement($attributeTranslation);
     }
 
     /**
@@ -215,59 +241,5 @@ class AttributeGroup implements Translatable
     public function getTranslations()
     {
         return $this->translations;
-    }
-
-    /**
-     * Set attribute
-     *
-     * @param ArrayCollection|Attribute[] $attributes Attributes
-     *
-     * @return $this
-     */
-    public function setAttributes(ArrayCollection $attributes)
-    {
-        foreach ($attributes as $attribute) {
-            $attribute->setAttributeGroup($this);
-        }
-        $this->attributes = $attributes;
-        
-        return $this;
-    }
-
-    /**
-     * Get attribute
-     *
-     * @return ArrayCollection|Attribute[] Attributes
-     */
-    public function getAttributes()
-    {
-        return $this->attributes;
-    }
-    /**
-     * Add attribute
-     *
-     * @param Attribute $attribute Attribute
-     *
-     * @return $this
-     */
-    public function addAttribute(Attribute $attribute)
-    {
-        $this->attributes->add($attribute);
-
-        return $this;
-    }
-
-    /**
-     * Remove attribute
-     *
-     * @param Attribute $attribute Attribute
-     *
-     * @return $this
-     */
-    public function removeAttribute(Attribute $attribute)
-    {
-        $this->attributes->remove($attribute);
-
-        return $this;
     }
 }
