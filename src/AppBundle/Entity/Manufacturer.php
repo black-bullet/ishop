@@ -101,6 +101,13 @@ class Manufacturer implements Translatable
     private $locale;
 
     /**
+     * @var ArrayCollection|Product[] $products Products
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Product", mappedBy="manufacturer", cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private $products;
+
+    /**
      * @var ManufacturerTranslation $translations Manufacturer translation
      *
      * @ORM\OneToMany(
@@ -117,6 +124,7 @@ class Manufacturer implements Translatable
     public function __construct()
     {
         $this->translations = new ArrayCollection();
+        $this->products     = new ArrayCollection();
     }
 
     /**
@@ -346,5 +354,59 @@ class Manufacturer implements Translatable
     public function getTranslations()
     {
         return $this->translations;
+    }
+
+    /**
+     * Set product
+     *
+     * @param ArrayCollection|Product[] $products Products
+     *
+     * @return $this
+     */
+    public function setProducts(ArrayCollection $products)
+    {
+        foreach ($products as $product) {
+            $product->setManufacturer($this);
+        }
+        $this->products = $products;
+
+        return $this;
+    }
+
+    /**
+     * Get product
+     *
+     * @return ArrayCollection|Product[] Products
+     */
+    public function getProducts()
+    {
+        return $this->products;
+    }
+    /**
+     * Add product
+     *
+     * @param Product $product Product
+     *
+     * @return $this
+     */
+    public function addProduct(Product $product)
+    {
+        $this->products->add($product);
+
+        return $this;
+    }
+
+    /**
+     * Remove product
+     *
+     * @param Product $product Product
+     *
+     * @return $this
+     */
+    public function removeProduct(Product $product)
+    {
+        $this->products->remove($product);
+
+        return $this;
     }
 }

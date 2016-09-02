@@ -31,13 +31,6 @@ class AttributeGroup implements Translatable
     private $id;
 
     /**
-     * @var ArrayCollection|Attribute[] $attributes Attributes
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Attribute", mappedBy="attributeGroup", cascade={"persist", "remove"}, orphanRemoval=true)
-     */
-    private $attributes;
-
-    /**
      * var string $name Name
      *
      * @ORM\Column(type="string", nullable=false)
@@ -65,6 +58,13 @@ class AttributeGroup implements Translatable
      * @Gedmo\Locale
      */
     private $locale;
+
+    /**
+     * @var ArrayCollection|Attribute[] $attributes Attributes
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Attribute", mappedBy="attributeGroup", cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private $attributes;
 
     /**
      * @var AttributeGroupTranslation $translations Attribute group translation
