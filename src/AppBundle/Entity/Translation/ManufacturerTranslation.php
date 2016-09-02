@@ -34,7 +34,7 @@ class ManufacturerTranslation extends AbstractPersonalTranslation
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Attribute", inversedBy="translations")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Manufacturer", inversedBy="translations")
      * @ORM\JoinColumn(name="object_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $object;
