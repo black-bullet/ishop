@@ -45,6 +45,8 @@ class AttributeGroup implements Translatable
      * @Assert\NotBlank()
      * @Assert\Type(type="string")
      * @Assert\Length(min="2", max="255")
+     *
+     * @Gedmo\Translatable
      */
     private $name;
 
@@ -95,30 +97,6 @@ class AttributeGroup implements Translatable
     }
 
     /**
-     * Get locale
-     *
-     * @return string Locale
-     */
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    /**
-     * Set locale
-     *
-     * @param string $locale locale
-     *
-     * @return $this
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-
-        return $this;
-    }
-
-    /**
      * Get name
      *
      * @return string Name
@@ -162,6 +140,30 @@ class AttributeGroup implements Translatable
     public function setSortOrder($sortOrder)
     {
         $this->sortOrder = $sortOrder;
+
+        return $this;
+    }
+
+    /**
+     * Get locale
+     *
+     * @return string Locale
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * Set locale
+     *
+     * @param string $locale locale
+     *
+     * @return $this
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
 
         return $this;
     }
@@ -230,7 +232,7 @@ class AttributeGroup implements Translatable
             $attribute->setAttributeGroup($this);
         }
         $this->attributes = $attributes;
-        
+
         return $this;
     }
 
